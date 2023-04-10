@@ -10,7 +10,7 @@ resource "aws_vpc_peering_connection" "peer" {
     vpc_id          = aws_vpc.main.id
     auto_accept    = true
 }
-    tags         = merge(var.tags, { Name = "${var.env}-peer"}
+    tags         = merge(var.tags, { Name = "${var.env}-peer"})
 }
 
 
