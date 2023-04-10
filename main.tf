@@ -19,8 +19,23 @@ resource "aws_subnet" "public_subnets" {
 resource "aws_internet_gateway" "igw" {
     vpc_id = aws_vpc.main.id
 
-    tags         = merge(var.tags, { Name = "${var.env}-igw"})
+    tags             = merge(var.tags, { Name = "${var.env}-igw"})
 }
+
+
+# Nat Gateway
+resource "aws_eip" "nat" {
+    instance         = var.public_subnets
+    vpc              = true
+}
+
+resource "aws_nat_gateway" "nat-gateways" {
+    for_each         = var.public_subnets
+    allocation_id    = aws_eip.nat[each.value["name"]].id
+    subnet_id        = aws_subnet.public_subnets[each.value["name"]].id
+    tags             = merge(var.tags, { Name = "${var.env}-${each.value["name"]}" }
+}
+
 
 # Public Route Table
 resource "aws_route_table" "public-route-table" {
@@ -56,7 +71,6 @@ resource "aws_subnet" "private_subnets" {
     availability_zone = each.value["availability_zone"]
     tags              = merge(var.tags, { Name = "${var.env}-${each.value["name"]}" })
   }
-
 
 
 # Private Route Table
