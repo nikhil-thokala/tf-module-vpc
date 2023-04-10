@@ -25,8 +25,8 @@ resource "aws_internet_gateway" "igw" {
 
 # Nat Gateway
 resource "aws_eip" "nat" {
-    instance         = var.public_subnets
-    vpc              = true
+    for_each     = var.public_subnets
+    vpc          = true
 }
 
 resource "aws_nat_gateway" "nat-gateways" {
