@@ -33,7 +33,7 @@ resource "aws_nat_gateway" "nat-gateways" {
     for_each         = var.public_subnets
     allocation_id    = aws_eip.nat[each.value["name"]].id
     subnet_id        = aws_subnet.public_subnets[each.value["name"]].id
-    tags             = merge(var.tags, { Name = "${var.env}-${each.value["name"]}" }
+    tags             = merge(var.tags, { Name = "${var.env}-${each.value["name"]}" })
 }
 
 
