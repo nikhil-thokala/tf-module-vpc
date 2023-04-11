@@ -7,7 +7,7 @@ resource "aws_vpc" "main" {
 resource "aws_vpc_peering_connection" "peer" {
     peer_owner_id  = data.aws_caller_identity.account.account_id
     peer_vpc_id    = var.default_vpc_id
-    vpc_id          = aws_vpc.main.id
+    vpc_id         = aws_vpc.main.id
     auto_accept    = true
 
     tags         = merge(var.tags, { Name = "${var.env}-peer"}
@@ -91,7 +91,7 @@ resource "aws_subnet" "private_subnets" {
 resource "aws_route_table" "private-route-table" {
     vpc_id = aws_vpc.main.id
 
-    for_each     = var.private_subnets
+    for_each = var.private_subnets
     route {
         cidr_block     = "0.0.0.0/0"
         nat_gateway_id = aws_nat_gateway.nat-gateways["public-${split("-", each.value["name"])[1]}"].id
